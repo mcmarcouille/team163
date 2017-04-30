@@ -175,11 +175,59 @@ public class MapApp {
 	 *             if any property value is not numeric 
 	 */
 
-	public static NavigationGraph createNavigationGraphFromMapFile(String graphFilepath){
-			// TODO: read/parse the input file graphFilepath and create
-			// NavigationGraph with vertices and edges
-			return null;
-
+	public static NavigationGraph createNavigationGraphFromMapFile(String graphFilepath)
+					throws FileNotFoundException, InvalidFileException{
+		
+		//get input from File
+		File f = new File(graphFilepath);
+		Scanner scr = new Scanner(f);
+		
+		//if graphFilepath is not found
+		if(!f.exists()) throw new FileNotFoundException("File not found");
+		
+		//get first line
+		String currLine = scr.nextLine();
+		String[] info = currLine.split(" ");
+		
+		//if header line in the file has < 3 columns
+		if (info.length < 3)
+			throw new InvalidFileException(graphFilepath);
+		
+		//parsing 
+		String[] names = new String[info.length - 2];
+		for(int i = 2; i < info.length; i++){
+			names[i - 2] = info[i];
+		}
+		
+		NavigationGraph graph = new NavigationGraph(names);
+		
+		while(scr.hasNextLine()){
+			currLine = scr.nextLine();
+			String[] data = currLine.split(" ");
+			if (data.length != info.length){
+				throw new InvalidFileException("Different number of properties");
+			}
+			
+			Location src = new Location(data[0]);
+			Location dest = new Location(data[1]);
+			List<Double> properties = new ArrayList<Double>();
+			
+			try{
+				for (int i = 2; i < info.length; i++){
+					properties.add(Double.parseDouble(data[i]));
+				}
+			}catch (NumberFormatException e){
+				throw new InvalidFileException("Not numeric");
+			}
+			
+			Path edge = new Path(src, dest, properties);
+			
+			graph.addVertex(src);
+			graph.addVertex(dest);
+			graph.addEdge(src, dest, edge);
+		}
+		
+		return graph;
 	}
 
 }
