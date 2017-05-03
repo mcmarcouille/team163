@@ -38,7 +38,7 @@ public class Location {
 			return true;
 		} else if (otherLocation == null) {
 			return false;
-		} else if (!name.equals(otherLocation.getName())) {
+		} else if (!name.equalsIgnoreCase(otherLocation.getName())) {
 			return false;
 		}
 		return true;

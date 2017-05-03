@@ -178,12 +178,16 @@ public class MapApp {
 	public static NavigationGraph createNavigationGraphFromMapFile(String graphFilepath)
 					throws FileNotFoundException, InvalidFileException{
 		
+		Scanner scr;
+		
+		try{
 		//get input from File
 		File f = new File(graphFilepath);
-		Scanner scr = new Scanner(f);
-		
-		//if graphFilepath is not found
-		if(!f.exists()) throw new FileNotFoundException("File not found");
+		scr = new Scanner(f);
+		} //if graphFilepath is not found
+		catch(FileNotFoundException e){
+			throw new FileNotFoundException("File not found");
+		}
 		
 		//get first line
 		String currLine = scr.nextLine();
@@ -191,7 +195,7 @@ public class MapApp {
 		
 		//if header line in the file has < 3 columns
 		if (info.length < 3)
-			throw new InvalidFileException(graphFilepath);
+			throw new InvalidFileException("Too many columns");
 		
 		//parsing 
 		String[] names = new String[info.length - 2];
@@ -199,11 +203,12 @@ public class MapApp {
 			names[i - 2] = info[i];
 		}
 		
-		NavigationGraph graph = new NavigationGraph(names);
+		NavigationGraph naviG = new NavigationGraph(names);
 		
 		while(scr.hasNextLine()){
 			currLine = scr.nextLine();
 			String[] data = currLine.split(" ");
+			
 			if (data.length != info.length){
 				throw new InvalidFileException("Different number of properties");
 			}
@@ -222,12 +227,12 @@ public class MapApp {
 			
 			Path edge = new Path(src, dest, properties);
 			
-			graph.addVertex(src);
-			graph.addVertex(dest);
-			graph.addEdge(src, dest, edge);
+			naviG.addVertex(src);
+			naviG.addVertex(dest);
+			naviG.addEdge(src, dest, edge);
 		}
 		
-		return graph;
+		return naviG;
 	}
 
 }
