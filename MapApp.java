@@ -27,11 +27,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-
+/**
+ * Driver class that reads/parses the input file and creates NavigationGraph
+ * object.
+ * 
+ * @author CS367
+ *
+ */
 public class MapApp {
 
-	private NavigationGraph graphObject;		//Initiate a Navigation Graph object
-
+	private NavigationGraph graphObject;
 
 	/**
 	 * Constructs a MapApp object
@@ -70,16 +75,8 @@ public class MapApp {
 
 	}
 
-
 	/**
 	 * Displays options to user about the various operations on the loaded graph
-	 *
-	 * PRECONDITIONS: none
-	 * 
-	 * POSTCONDITIONS: display options
-	 *
-	 * @param none
-	 * @return none
 	 */
 	public void startService() {
 
@@ -184,7 +181,6 @@ public class MapApp {
 		sc.close();
 	}
 
-
 	/**
 	 * Reads and parses the input file passed as argument create a
 	 * NavigationGraph object. The edge property names required for
@@ -208,64 +204,55 @@ public class MapApp {
 	 *             	than as described in the header or 
 	 *             if any property value is not numeric 
 	 */
+
 	public static NavigationGraph createNavigationGraphFromMapFile(String graphFilepath)
 					throws FileNotFoundException, InvalidFileException{
 		
-		Scanner scr;
-		
-		try{
-		//get input from File
+
 		File f = new File(graphFilepath);
-		scr = new Scanner(f);
-		} //if graphFilepath is not found
-		catch(FileNotFoundException e){
-			throw new FileNotFoundException("File not found");
-		}
+		Scanner scrn = new Scanner(f);
+
 		
 		//get first line
-		String currLine = scr.nextLine();
-		String[] info = currLine.split(" ");
-		
-		//if header line in the file has < 3 columns
-		if (info.length < 3)
-			throw new InvalidFileException("Too many columns");
+		String[] currLine = scrn.nextLine().split(" ");
 		
 		//parsing 
-		String[] names = new String[info.length - 2];
-		for(int i = 2; i < info.length; i++){
-			names[i - 2] = info[i];
+		String[] names = new String[currLine.length - 2];
+		for(int i = 2; i < currLine.length; i++){
+			names[i - 2] = currLine[i];
 		}
+		
+		//if header line in the file has < 3 columns
+		if (currLine.length < 3)
+			throw new InvalidFileException("Too many columns");
+		
 		
 		NavigationGraph naviG = new NavigationGraph(names);
 		
-		while(scr.hasNextLine()){
-			currLine = scr.nextLine();
-			String[] data = currLine.split(" ");
+		while(scrn.hasNextLine()){
+			String scr = scrn.next().toLowerCase();
+			String dstn = scrn.next().toLowerCase();
 			
-			if (data.length != info.length){
-				throw new InvalidFileException("Different number of properties");
+			ArrayList<Double> properties = new ArrayList<Double>();
+			for (int i = 0; i < names.length; i++){
+				properties.add(Double.parseDouble(scrn.next()));
 			}
 			
-			Location src = new Location(data[0]);
-			Location dest = new Location(data[1]);
-			List<Double> properties = new ArrayList<Double>();
+			naviG.addVertex(new Location(scr));
+			naviG.addVertex(new Location(dstn));
 			
-			try{
-				for (int i = 2; i < info.length; i++){
-					properties.add(Double.parseDouble(data[i]));
-				}
-			}catch (NumberFormatException e){
-				throw new InvalidFileException("Not numeric");
-			}
+			Location source = naviG.getLocationByName(scr);
+			Location destination = naviG.getLocationByName(dstn);
 			
-			Path edge = new Path(src, dest, properties);
+			Path edge = new Path(source, destination, properties);
 			
-			naviG.addVertex(src);
-			naviG.addVertex(dest);
-			naviG.addEdge(src, dest, edge);
+			naviG.addEdge(source, destination, edge);
 		}
 		
+		
+		scrn.close();
 		return naviG;
+		
 	}
 
 }
