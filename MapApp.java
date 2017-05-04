@@ -1,3 +1,25 @@
+// Semester:         CS367 Spring 2016 
+// PROJECT:          p5
+// FILE:             MapApp.java
+//
+// TEAM:    p5team 163
+// Authors: Matthew Marcouiller, Jack Yang
+// Author1: Matthew Marcouiller, mcmarcouille@wisc.edu, mcmarcouille, Lec 03
+// Author2: Jack Yang, zyang366@wisc.edu, zyang366, Lec 03
+//
+// ---------------- OTHER ASSISTANCE CREDITS 
+// Persons: none 
+// 
+// Online sources: none 
+//////////////////////////// 80 columns wide //////////////////////////////////
+/**
+ * This is the driver class that contains the main method. This app must first read/parse the input filename passed as command line argument and create a NavigationGraph object.
+ *
+ * <p>Bugs: (a list of bugs and other problems)
+ *
+ * @author Matthew Marcouiller, Jack Yang
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -5,22 +27,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Driver class that reads/parses the input file and creates NavigationGraph
- * object.
- * 
- * @author CS367
- *
- */
+
 public class MapApp {
 
-	private NavigationGraph graphObject;
+	private NavigationGraph graphObject;		//Initiate a Navigation Graph object
+
 
 	/**
 	 * Constructs a MapApp object
+	 *
+	 * PRECONDITIONS: graph should not null
 	 * 
-	 * @param graph
-	 *            NaviagtionGraph object
+	 * POSTCONDITIONS: contstruct the object
+	 *
+	 * @param graph - NaviagtionGraph object
+	 * @return none
 	 */
 	public MapApp(NavigationGraph graph) {
 		this.graphObject = graph;
@@ -49,8 +70,16 @@ public class MapApp {
 
 	}
 
+
 	/**
 	 * Displays options to user about the various operations on the loaded graph
+	 *
+	 * PRECONDITIONS: none
+	 * 
+	 * POSTCONDITIONS: display options
+	 *
+	 * @param none
+	 * @return none
 	 */
 	public void startService() {
 
@@ -155,14 +184,19 @@ public class MapApp {
 		sc.close();
 	}
 
+
 	/**
 	 * Reads and parses the input file passed as argument create a
 	 * NavigationGraph object. The edge property names required for
 	 * the constructor can be got from the first line of the file
-	 * by ignoring the first 2 columns - source, destination. 
-	 * Use the graph object to add vertices and edges as
-	 * you read the input file.
+	 * by ignoring the first 2 columns - source, destination.  
+	 * Use the graph object to add vertices and edges as 
+	 * you read the input file. 
+	 *
+	 * PRECONDITIONS: file path should be valid
 	 * 
+	 * POSTCONDITIONS: rens the program
+	 *
 	 * @param graphFilepath
 	 *            path to the input file
 	 * @return NavigationGraph object
@@ -174,7 +208,6 @@ public class MapApp {
 	 *             	than as described in the header or 
 	 *             if any property value is not numeric 
 	 */
-
 	public static NavigationGraph createNavigationGraphFromMapFile(String graphFilepath)
 					throws FileNotFoundException, InvalidFileException{
 		
